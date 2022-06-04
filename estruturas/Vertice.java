@@ -1,4 +1,4 @@
-package grafo;
+package estruturas;
 import java.util.Objects;
 
 public class Vertice implements Comparable<Vertice>{

@@ -1,6 +1,6 @@
-package grafo;
+package estruturas;
 
-public class Aresta {
+public class Aresta implements Comparable<Aresta>{
     private Vertice origem;
     private Vertice destino;
     private int peso;
@@ -50,5 +50,12 @@ public class Aresta {
     public String toString() {
         // TODO Auto-generated method stub
         return this.getOrigem() + " -> " + this.getDestino() + " : " + this.getPeso();
+    }
+
+
+    @Override
+    public int compareTo(Aresta o) {
+        // TODO Auto-generated method stub
+        return this.peso - o.peso;
     }
 }

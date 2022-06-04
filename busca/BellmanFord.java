@@ -1,34 +1,32 @@
 package busca;
 
-import java.util.AbstractSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
-import grafo.Aresta;
-import grafo.Grafo;
-import grafo.Vertice;
+
+import estruturas.AlgoritmoDeBusca;
+import estruturas.Aresta;
+import estruturas.Grafo;
+import estruturas.Vertice;
 
 public class BellmanFord extends AlgoritmoDeBusca{
-    private Map<Integer, Caminho> menoresCaminhos;  
+    private Map<Vertice, Caminho> menoresCaminhos;  
     private List<Aresta> arestas;
 
-    
     public BellmanFord(Grafo g, Integer v) {
         this.setGrafo(g);
         this.setVerticeOrigem(this.getGrafo().getVertice(v));
         this.setArestas(g.getArestas());
-        this.menoresCaminhos = new HashMap<Integer, Caminho>(this.getGrafo().getNumVertices());
+        this.menoresCaminhos = new HashMap<Vertice, Caminho>(this.getGrafo().getNumVertices());
     }
 
-    public Map<Integer, Caminho> getMenoresCaminhos() {
+    public Map<Vertice, Caminho> getMenoresCaminhos() {
         return menoresCaminhos;
     }
 
-    public void setMenoresCaminhos(Map<Integer, Caminho> menoresCaminhos) {
+    public void setMenoresCaminhos(Map<Vertice, Caminho> menoresCaminhos) {
         this.menoresCaminhos = menoresCaminhos;
     }
 
@@ -59,9 +57,14 @@ public class BellmanFord extends AlgoritmoDeBusca{
     }
 
     private void relaxamento(Map<Vertice, Integer> distMax, Map<Vertice, Vertice> predecessor) {
-        List<Vertice> set = new LinkedList<Vertice>();
-        set.add(this.getVerticeOrigem());
-        for (int i = 0; i < this.getGrafo().getNumVertices() - 1; i++) {
+        final int numVertices = this.getGrafo().getNumVertices();
+        var vertices = this.getGrafo().getVertices();
+        vertices.forEach((vertice) -> {
+            menoresCaminhos.put(vertice, null);
+        });
+
+        Caminho c = new Caminho();
+        for (int i = 0; i < numVertices - 1; i++) {
             for (Aresta aresta : this.getArestas()) {
                 Vertice u = aresta.getOrigem();
                 Vertice v = aresta.getDestino();
@@ -69,14 +72,26 @@ public class BellmanFord extends AlgoritmoDeBusca{
                 int distanciaV = distMax.get(v);
                 int peso = aresta.getPeso();
                 if(distMax.get(u) != Integer.MAX_VALUE && distanciaU + peso < distanciaV){
-                    set.add(v);
                     distMax.put(v, distanciaU + peso);
-                    predecessor.put(v, u);
+                    if(!c.getPath().contains(u))
+                        c.add(u);
+                    if(!c.getPath().contains(v))
+                        c.add(v);
                 }
             }
-            set.add(new Vertice(-1));
         }
-        System.out.println(set);
+        System.out.println(c);
+        createMenoresCaminhos(c);
+        menoresCaminhos.forEach((key, value) -> {
+            System.out.println(value);
+        });
+    }
+
+    private void createMenoresCaminhos(Caminho c) {       
+        menoresCaminhos.forEach((key, value) -> {
+            Caminho aux = new Caminho(c.getPath().subList(0, c.getPath().indexOf(key)+1));
+            menoresCaminhos.put(key, aux);
+        });
     }
 
     public void executar(){
@@ -86,7 +101,6 @@ public class BellmanFord extends AlgoritmoDeBusca{
         this.initMaps(distVerticeMax, predecessor);
         this.relaxamento(distVerticeMax, predecessor);
         System.out.println(distVerticeMax);
-        System.out.println(predecessor);
     }
 
     @Override
@@ -94,4 +108,12 @@ public class BellmanFord extends AlgoritmoDeBusca{
         // TODO Auto-generated method stub
         return super.toString();
     }
+
+    public static List<Vertice> mergeList(List<Vertice> a, List<Vertice> b) {
+        for (Vertice vertice : b) {
+            if(!a.contains(vertice))
+                a.add(vertice);
+        }
+        return a;
+    }   
 }

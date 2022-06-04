@@ -1,9 +1,8 @@
-package busca;
+package estruturas;
 import java.util.List;
 import java.util.Map;
 
-import grafo.Grafo;
-import grafo.Vertice;
+import busca.Caminho;
 
 public abstract class AlgoritmoDeBusca {
     private Grafo grafo;

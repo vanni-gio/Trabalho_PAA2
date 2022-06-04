@@ -1,24 +1,35 @@
 package busca;
 import java.util.LinkedList;
+import java.util.List;
 
-import grafo.Vertice;
+import estruturas.Vertice;
 
 public class Caminho {
-    private LinkedList<Vertice> path;
+    private List<Vertice> path;
 
     public Caminho() {
         this.setPath(new LinkedList<>());
+    }
+
+    public Caminho(List<Vertice> list) {
+        this.setPath(list);
+    }
+
+    public Caminho(Vertice inicial) {
+        var list = new LinkedList<Vertice>();
+        list.add(inicial);
+        this.setPath(list);
     }
 
     public boolean hasVertice(Vertice v){
         return this.path.contains(v);
     }
 
-    public LinkedList<Vertice> getPath() {
+    public List<Vertice> getPath() {
         return path;
     }
 
-    public void setPath(LinkedList<Vertice> path) {
+    public void setPath(List<Vertice> path) {
         this.path = path;
     }
 

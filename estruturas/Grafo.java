@@ -1,9 +1,9 @@
-package grafo;
+package estruturas;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Grafo{
     private int numVertices;
@@ -15,8 +15,13 @@ public class Grafo{
         return arestas;
     }
 
-    public Set<Vertice> getVertices(){
-        return this.adjVertices.keySet();
+    public List<Vertice> getVertices(){
+        var vertices = new LinkedList<Vertice>();
+        this.adjVertices.keySet().forEach((v) -> {
+            vertices.push(v);
+        });
+        vertices.sort((v,u) -> v.getValue() - u.getValue());
+        return vertices;
     }
 
     public int getNumVertices() {
@@ -49,6 +54,14 @@ public class Grafo{
                 arts.add(aresta);
         }
         return arts;
+    }
+
+    public Aresta getAresta(Vertice u, Vertice v){
+        for (Aresta aresta : arestas) {
+            if(aresta.getOrigem().equals(u) && aresta.getDestino().equals(v))
+                return aresta;
+        }
+        return null;
     }
 
     public void setAdjVertices(Map<Vertice, List<Vertice>> adjVertices) {

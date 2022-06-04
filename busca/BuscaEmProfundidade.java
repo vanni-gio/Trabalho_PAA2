@@ -2,8 +2,9 @@ package busca;
 import java.util.LinkedList;
 import java.util.Stack;
 
-import grafo.Grafo;
-import grafo.Vertice;
+import estruturas.AlgoritmoDeBusca;
+import estruturas.Grafo;
+import estruturas.Vertice;
 
 /**
  * BuscaEmLargura

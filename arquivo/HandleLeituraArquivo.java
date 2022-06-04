@@ -32,7 +32,7 @@ public class HandleLeituraArquivo {
             //numero de vertices
             linha = this.buffer.readLine();
             do {
-                if(!linha.isBlank())
+                if(!linha.isEmpty())
                     this.handleLinha(linha);
                 linha = this.buffer.readLine();
             } while (linha != null);

@@ -3,8 +3,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import grafo.Grafo;
-import grafo.Vertice;
+import estruturas.AlgoritmoDeBusca;
+import estruturas.Grafo;
+import estruturas.Vertice;
 
 public class BuscaEmLargura extends AlgoritmoDeBusca{
     private final Caminho caminho = new Caminho();

@@ -1,5 +1,6 @@
 import arquivo.HandleLeituraArquivo;
-import busca.AlgoritmoDeBusca;
+import arvoreminima.Kruskal;
+import arvoreminima.Prim;
 import busca.BellmanFord;
 
 import java.util.Collections;
@@ -10,8 +11,9 @@ import java.util.Vector;
 import arquivo.DadosArquivo;
 import busca.BuscaEmLargura;
 import busca.BuscaEmProfundidade;
-import grafo.Grafo;
-import grafo.Vertice;
+import estruturas.AlgoritmoDeBusca;
+import estruturas.Grafo;
+import estruturas.Vertice;
 
 
 public class Main {
@@ -27,9 +29,7 @@ public class Main {
     private static void ordenaVerticesAdj(Grafo g) {
         for (Map.Entry<Vertice, List<Vertice>> entry : g.getAdjVertices().entrySet()) {
             List<Vertice> list = entry.getValue();
-            System.out.println(list);
             Collections.sort(list);
-            System.out.println(list);
         }
     }
 
@@ -37,13 +37,17 @@ public class Main {
         HandleLeituraArquivo handleArq = new HandleLeituraArquivo("C:\\Users\\Giovanni Pereira\\Desktop\\Novo(a) Documento de Texto.txt");
         DadosArquivo dados = handleArq.lerArquivo();
         Grafo g = createGrafo(dados);
-        System.out.println(g);
         BuscaEmLargura BFS = new BuscaEmLargura(g, 3);
         BuscaEmProfundidade DFS = new BuscaEmProfundidade(g, 3);
-        BellmanFord bellford = new BellmanFord(g, 1);
-        handleAlgoritmoBusca(DFS);
-        handleAlgoritmoBusca(BFS);
-        bellford.executar();
+        BellmanFord bellford = new BellmanFord(g, 3);
+        Kruskal kruskal = new Kruskal(g);
+        Prim prim = new Prim(g, 2);
+        // handleAlgoritmoBusca(DFS);
+        // handleAlgoritmoBusca(BFS);
+        // bellford.executar();
+        // kruskal.KruskalMST();
+        prim.primMST();
+
     }
 
     private static void handleAlgoritmoBusca(AlgoritmoDeBusca algoritmo) {
