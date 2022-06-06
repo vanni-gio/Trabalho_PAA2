@@ -46,7 +46,6 @@ public class GenerateGraphiz {
         arestas.forEach((aresta) -> 
             coresAresta.put(aresta, Cor.NULL)
         );
-        this.definirCoresArestas();
     }
 
     public String getTipoGrafo() {
@@ -95,7 +94,7 @@ public class GenerateGraphiz {
         return arestasVizinhas;
     }
 
-    public void definirCoresArestas(){
+    public void definirCoresArestas() {
         this.arestasMin.forEach((aresta) -> {
             var arestasVizinhas = getArestasVizinhas(aresta);
             int indexCor = 0;
@@ -109,9 +108,6 @@ public class GenerateGraphiz {
             }
             this.getCoresAresta().put(aresta, corAtual);
         });
-        var dotCode = this.gerarDotCode();
-        this.createFile(dotCode);
-        this.createImgGrafo();
     }
 
     public void createImgGrafo(){
@@ -144,18 +140,24 @@ public class GenerateGraphiz {
         boolean orientado = this.getTipoGrafo().equals("") ? false : true;
         var arrow = orientado ? "->" : "--";
         var tipo = orientado ? "digraph" : "graph";
-        // A -- B [label=".63",color=antiquewhite]
-        var aresta = "& @ ! [label=\"#\", color=&]\n";
+        var aresta = "& @ ! [label=\"#\", color=&]\n";  // A -- B [label=".63",color=antiquewhite]
         this.dotCode = "# G{ \nlayout=neato\n\tnode[shape=\"circle\"]\n".replace("#", tipo);
         this.getCoresAresta().forEach((a,cor) -> {
-            this.dotCode += aresta
-                .replaceFirst("&", Integer.toString(a.getOrigem().getValue()))
-                .replaceFirst("@", arrow)
-                .replaceFirst("!", Integer.toString(a.getDestino().getValue()))
-                .replaceFirst("#", Integer.toString(a.getPeso()))
-                .replaceFirst("&", cor.getValor());
+        this.dotCode += aresta
+            .replaceFirst("&", Integer.toString(a.getOrigem().getValue()))
+            .replaceFirst("@", arrow)
+            .replaceFirst("!", Integer.toString(a.getDestino().getValue()))
+            .replaceFirst("#", Integer.toString(a.getPeso()))
+            .replaceFirst("&", cor.getValor());
         });
         this.dotCode += "}";
         return dotCode;
+    }
+
+    public void run() {
+        this.definirCoresArestas();
+        var dotCode = this.gerarDotCode();
+        this.createFile(dotCode);
+        this.createImgGrafo();
     }
 }

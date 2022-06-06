@@ -80,7 +80,6 @@ public class BellmanFord extends AlgoritmoDeBusca{
                 }
             }
         }
-        System.out.println(c);
         createMenoresCaminhos(c);
         menoresCaminhos.forEach((key, value) -> {
             System.out.println(value);
@@ -94,13 +93,15 @@ public class BellmanFord extends AlgoritmoDeBusca{
         });
     }
 
-    public void executar(){
+    public void buscar(){
         final int size = this.getGrafo().getNumVertices();
         Map<Vertice, Integer> distVerticeMax = new HashMap<Vertice,Integer>(size);
 		Map<Vertice, Vertice> predecessor = new HashMap<Vertice,Vertice>(size);
         this.initMaps(distVerticeMax, predecessor);
         this.relaxamento(distVerticeMax, predecessor);
-        System.out.println(distVerticeMax);
+        distVerticeMax.forEach((v,d) -> {
+            System.out.println("destino " + v.toString() + " dist.: " + d);
+        });
     }
 
     @Override

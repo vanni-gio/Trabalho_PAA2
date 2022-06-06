@@ -1,5 +1,6 @@
 package arvoreminima;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,9 +13,20 @@ import estruturas.Vertice;
 
 
 public class Kruskal extends AlgoritmoAGM{
+	private int pesoMin;
+	private Collection<Aresta> result;
 	
+	public Collection<Aresta> getResult() {
+		return result;
+	}
+
+	public void setResult(List<Aresta> result) {
+		this.result = result;
+	}
+
 	public Kruskal(Grafo grafo) {
 		super(grafo);
+		this.pesoMin = 0;
 	}
 
 	class SubSet
@@ -73,20 +85,28 @@ public class Kruskal extends AlgoritmoAGM{
 			var x = this.find(pai, aresta.getOrigem());
 			var y = this.find(pai, aresta.getDestino());
 
-
 			if(!x.equals(y)){
 				e++;
 				result.add(aresta);
 				this.union(pai, rank, x, y);
 			}
 		}
-		int custoMinimo = 0;
-		for (Aresta aresta : result) {
-			custoMinimo += aresta.getPeso();
-			System.out.println(aresta.getOrigem().toString() + " " + aresta.getDestino().toString());
-		}
-		System.out.println("Custo Minimo: " + custoMinimo);
-
+		this.setResult(result);
+		// int custoMinimo = 0;
+		// for (Aresta aresta : result) {
+		// 	custoMinimo += aresta.getPeso();
+		// 	System.out.println(aresta.getOrigem().toString() + " " + aresta.getDestino().toString());
+		// }
+		// System.out.println("Custo Minimo: " + custoMinimo);
 	}
+
+	public void printKruskal() {
+        System.out.print("arestas: ");
+        this.getResult().forEach((aresta) -> {
+            System.out.print("(" + aresta.getOrigem() + ", " + aresta.getDestino() +") " );
+            this.pesoMin += aresta.getPeso();
+        });
+        System.out.println("\npeso total: " + this.pesoMin);
+    }
 		
 }

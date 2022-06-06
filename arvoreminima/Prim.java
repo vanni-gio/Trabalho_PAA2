@@ -1,11 +1,10 @@
 package arvoreminima;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-// import java.util.stream.Stream;
-// import java.util.Map.Entry;
-// import java.util.stream.Collectors;
-// import java.util.LinkedHashMap;
+
 
 import estruturas.AlgoritmoAGM;
 import estruturas.Aresta;
@@ -17,15 +16,24 @@ import estruturas.Vertice;
 public class Prim extends AlgoritmoAGM {
     private Vertice inicial;
     private int pesoMin;
-	private HashMap<Vertice, Aresta> primAGM; 
+	private HashMap<Vertice, Aresta> primAGM;
+    private Collection<Aresta> result;
+    
 
+    public Collection<Aresta> getResult() {
+        return result;
+    }
+
+    public void setResult(Collection<Aresta> result) {
+        this.result = result;
+    }
 
     public Prim(Grafo grafo, Integer inicial) {
 		super(grafo);
         this.inicial = new Vertice(inicial);
         this.pesoMin = 0;
-        this.primAGM = null;
-		//TODO Auto-generated constructor stub
+        this.primAGM = new HashMap<Vertice, Aresta>();
+        this.result = new LinkedList<Aresta>();
 	}
     
     public HashMap<Vertice, Aresta> getPrimAGM() {
@@ -86,26 +94,18 @@ public class Prim extends AlgoritmoAGM {
             }
         }
         this.setPrimAGM(parent);
-        printMS(parent);
+        this.setResult(parent.values());
     }
 
-    public void printMS(HashMap<Vertice, Aresta> parent) {
-        parent.remove(this.getInicial(), null);
+    public void printPrimAGM() {
+        this.getPrimAGM().remove(this.getInicial(), null);
         System.out.println("vertice inicial: " + this.getInicial());
         System.out.print("arestas: ");
-        parent.forEach((vertice, aresta) -> {
+        this.getPrimAGM().forEach((vertice, aresta) -> {
             System.out.print("(" + aresta.getOrigem() + ", " + aresta.getDestino() +") " );
             this.pesoMin += aresta.getPeso();
         });
         System.out.println("\npeso total: " + this.pesoMin);
     }
      
-    // public static Map<Vertice, Vertice> ordenaMap(Map<Vertice, Vertice> map) {
-    //     Map<Vertice, Vertice> sorted =
-	// 		    map.entrySet().stream()
-	// 		       .sorted(Map.Entry.comparingByValue())
-    //                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-
-    //     return sorted;
-    // }
 }

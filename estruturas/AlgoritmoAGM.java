@@ -27,5 +27,4 @@ public abstract class AlgoritmoAGM {
 	public void setGrafo(Grafo grafo) {
 		this.grafo = grafo;
 	}
-  
 }
