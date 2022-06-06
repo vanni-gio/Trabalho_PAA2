@@ -14,6 +14,7 @@ import busca.BuscaEmProfundidade;
 import estruturas.AlgoritmoDeBusca;
 import estruturas.Grafo;
 import estruturas.Vertice;
+import handleGraphiz.GenerateGraphiz;
 
 
 public class Main {
@@ -22,11 +23,11 @@ public class Main {
         g.setNumVertices(dadosArq.getNumVertices());
         for (Vector<Integer> vector : dadosArq.getVerticesArray())
             g.addVertice(vector.elementAt(0), vector.elementAt(1), vector.elementAt(2));
-        ordenaVerticesAdj(g);
+        ordenaGrafo(g);
         return g;
     }
 
-    private static void ordenaVerticesAdj(Grafo g) {
+    private static void ordenaGrafo(Grafo g) {
         for (Map.Entry<Vertice, List<Vertice>> entry : g.getAdjVertices().entrySet()) {
             List<Vertice> list = entry.getValue();
             Collections.sort(list);
@@ -47,12 +48,13 @@ public class Main {
         // bellford.executar();
         // kruskal.KruskalMST();
         prim.primMST();
-
+        var arestasAGM = prim.getPrimAGM().values();
+        var graphiz = new GenerateGraphiz(arestasAGM, g);
     }
 
     private static void handleAlgoritmoBusca(AlgoritmoDeBusca algoritmo) {
         algoritmo.buscar();
-        System.out.println("Caminho " + algoritmo.className() + ": " + algoritmo.getCaminho());
+        System.out.println("Caminho " + algoritmo.className() + " : " + algoritmo.getCaminho());
 
     }
 }

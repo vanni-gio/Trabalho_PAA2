@@ -36,7 +36,6 @@ public class Aresta implements Comparable<Aresta>{
     }
 
 
-
     public int getPeso() {
         return peso;
     }
@@ -56,6 +55,13 @@ public class Aresta implements Comparable<Aresta>{
     @Override
     public int compareTo(Aresta o) {
         // TODO Auto-generated method stub
-        return this.peso - o.peso;
+        return this.getOrigem().getValue() - o.getOrigem().getValue();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Aresta other = (Aresta) obj;
+        // TODO Auto-generated method stub
+        return (this.getDestino().equals(other.getDestino()) && this.getOrigem().equals(other.getOrigem())) || (this.getOrigem().equals(other.getDestino()) && this.getDestino().equals(other.getOrigem()));
     }
 }

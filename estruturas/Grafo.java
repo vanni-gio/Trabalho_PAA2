@@ -11,6 +11,10 @@ public class Grafo{
     private Map<Vertice, List<Vertice>> adjVertices;
     private boolean orientado = false;
 
+    public boolean isOrientado() {
+        return orientado;
+    }
+
     public List<Aresta> getArestas() {
         return arestas;
     }

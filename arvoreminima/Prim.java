@@ -8,6 +8,7 @@ import java.util.Map;
 // import java.util.LinkedHashMap;
 
 import estruturas.AlgoritmoAGM;
+import estruturas.Aresta;
 import estruturas.Grafo;
 import estruturas.Vertice;
 
@@ -16,16 +17,25 @@ import estruturas.Vertice;
 public class Prim extends AlgoritmoAGM {
     private Vertice inicial;
     private int pesoMin;
-	
+	private HashMap<Vertice, Aresta> primAGM; 
 
 
     public Prim(Grafo grafo, Integer inicial) {
 		super(grafo);
         this.inicial = new Vertice(inicial);
         this.pesoMin = 0;
+        this.primAGM = null;
 		//TODO Auto-generated constructor stub
 	}
     
+    public HashMap<Vertice, Aresta> getPrimAGM() {
+        return primAGM;
+    }
+
+    public void setPrimAGM(HashMap<Vertice, Aresta> primAGM) {
+        this.primAGM = primAGM;
+    }
+
     public Vertice getInicial() {
         return inicial;
     }
@@ -50,7 +60,7 @@ public class Prim extends AlgoritmoAGM {
     public void primMST(){
         final var numV = this.getGrafo().getNumVertices();
         var pesos = new HashMap<Vertice, Integer>(numV);
-        var parent = new HashMap<Vertice, Vertice>(numV);
+        var parent = new HashMap<Vertice, Aresta>(numV);
         var mst = new HashMap<Vertice, Boolean>(numV);
         var vertices = this.getGrafo().getVertices();
         for (var vertice :  vertices) {
@@ -68,23 +78,24 @@ public class Prim extends AlgoritmoAGM {
                 var aresta = grafo.getAresta(minV, u);
                 if(aresta != null){
                     if(!mst.get(u) && aresta.getPeso() < pesos.get(u)){
-                        parent.put(u, minV);
+                        Aresta a = new Aresta(minV, u, aresta.getPeso());
+                        parent.put(u, a);
                         pesos.put(u, aresta.getPeso());
                     }
                 }
             }
         }
-        printMS(parent, pesos);
+        this.setPrimAGM(parent);
+        printMS(parent);
     }
 
-    public void printMS(HashMap<Vertice, Vertice> parent, HashMap<Vertice, Integer> pesos) {
+    public void printMS(HashMap<Vertice, Aresta> parent) {
         parent.remove(this.getInicial(), null);
         System.out.println("vertice inicial: " + this.getInicial());
         System.out.print("arestas: ");
-        parent.forEach((u,v) -> {
-            System.out.print("(" + v + ", " + u +") " );
-            Integer peso = pesos.get(u);
-            this.pesoMin += peso;
+        parent.forEach((vertice, aresta) -> {
+            System.out.print("(" + aresta.getOrigem() + ", " + aresta.getDestino() +") " );
+            this.pesoMin += aresta.getPeso();
         });
         System.out.println("\npeso total: " + this.pesoMin);
     }
