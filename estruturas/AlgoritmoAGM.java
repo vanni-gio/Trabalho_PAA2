@@ -1,9 +1,7 @@
 package estruturas;
 
 
-/**
- * AlgoritmoArvoreGeradoraMinima
- */
+// Classe abstrata para encapsular métodos e atributos utilizados por todos os algoritmos de árvore geradora mínima.
 public abstract class AlgoritmoAGM {
     private Grafo grafo;
     private Aresta aresta;

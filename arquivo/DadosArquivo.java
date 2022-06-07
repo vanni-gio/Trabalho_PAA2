@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 
-
+// Classe para encapsular os dados lidos do arquivo
 public class DadosArquivo {
     private boolean orientado;
     private Integer numVertices;
@@ -39,14 +39,24 @@ public class DadosArquivo {
         this.orientado = orientado;
     }
 
-    public void addAresta(Integer u, Integer v, Integer peso){
+    // Entrada: origem, destino e peso de uma aresta do arquivo.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Cria um vetor com as informações da aresta e adiciona na lista.    
+    public void addAresta(Integer origem, Integer destino, Integer peso){
         Vector<Integer> vector = new Vector<Integer>(3);
-        vector.add(u);
-        vector.add(v);
+        vector.add(origem);
+        vector.add(destino);
         vector.add(peso);
         this.arestasList.add(vector);
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Imprime os dados do arquivo *debug*
     public void print(){
         System.out.println(this.orientado);
         System.out.println(this.numVertices);

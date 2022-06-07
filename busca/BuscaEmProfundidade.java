@@ -17,11 +17,17 @@ public class BuscaEmProfundidade extends AlgoritmoDeBusca{
         this.setVertices(this.getGrafo().getAdjVertices());
         this.setVerticeOrigem(this.getGrafo().getVertice(new Vertice(v)));
     }
-
+    
     public Caminho getCaminho() {
         return caminho;
     }
 
+
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Executa o algoritmo de busca em profundidade. 
     public void buscar() {
         Vertice atual = this.getVerticeOrigem();
         LinkedList<Vertice> visitados = new LinkedList<Vertice>();

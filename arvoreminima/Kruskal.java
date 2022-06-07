@@ -16,6 +16,18 @@ public class Kruskal extends AlgoritmoAGM{
 	private int pesoMin;
 	private Collection<Aresta> result;
 	
+	// Classe para encapsular o pai de um vértice assim como seu rank.
+	class SubSet
+    {
+		Vertice pai;
+		int rank;
+		
+		public SubSet(Vertice pai){
+			this.pai = pai;
+			this.rank = 0;
+		}
+    };
+	
 	public Collection<Aresta> getResult() {
 		return result;
 	}
@@ -29,21 +41,11 @@ public class Kruskal extends AlgoritmoAGM{
 		this.pesoMin = 0;
 	}
 
-	class SubSet
-    {
-		Vertice pai;
-		int rank;
-
-		public SubSet(){
-
-		}
-
-		public SubSet(Vertice pai){
-			this.pai = pai;
-			this.rank = 0;
-		}
-    };
-
+	// Entrada: Subset contendo rank e pai de um vértice, e vértice a ser procurado.
+    // Saída: Vértice pai achado.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Procura um vértice como pai do em cada subconjunto.
 	public Vertice find(Map<Vertice, SubSet> subset, Vertice v){
         if (subset.get(v).pai.equals(v))
 			return v;
@@ -51,21 +53,32 @@ public class Kruskal extends AlgoritmoAGM{
 		return find(subset, subset.get(v).pai);
     }
 
+	// Entrada: Mapa de pais, rank dos vertices e vértices a serem unidos.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Alteração nos pais e ranks dos mapas.
+    // Descrição: Une as componentes rankeadas por "u" e "v" em uma só tornando "v" o pai de "u" ou vice versa.
 	public void union(Map<Vertice, SubSet> pai, Map<Vertice, Integer> rank, Vertice u, Vertice v){
-		var xroot = this.find(pai, u);
-        var yroot = this.find(pai, v);
+		var uRoot = this.find(pai, u);
+        var vRoot = this.find(pai, v);
 
-		if(rank.get(xroot) < rank.get(yroot)){
-			pai.put(xroot, new SubSet(yroot));
-		}else if(rank.get(xroot) > rank.get(yroot)){
-			pai.put(yroot, new SubSet(xroot));
+		if(rank.get(uRoot) < rank.get(vRoot)){
+			pai.put(uRoot, new SubSet(vRoot));
+		}else if(rank.get(uRoot) > rank.get(vRoot)){
+			pai.put(vRoot, new SubSet(uRoot));
 		}else{
-			pai.put(yroot, new SubSet(xroot));
-			rank.put(yroot, rank.get(yroot) + 1);
+			pai.put(vRoot, new SubSet(uRoot));
+			rank.put(vRoot, rank.get(vRoot) + 1);
 		}
  
 	}
 
+
+	// Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Realiza o algoritmo de Kruskal.
 	public void KruskalMST() {
 		List<Aresta> result = new LinkedList<Aresta>();
 		int i = 0, e = 0;
@@ -78,7 +91,7 @@ public class Kruskal extends AlgoritmoAGM{
 			rank.put(vertice, 0);
 		}
 		var arestas = this.getGrafo().getArestas();
-		arestas.sort((a, b) -> a.getPeso() - b.getPeso());
+		arestas.sort((a, b) -> a.getPeso() - b.getPeso()); // ordena pelos pesos
 		while (e < this.getGrafo().getNumVertices() - 1) {
 			var aresta = arestas.get(i++);
 
@@ -100,6 +113,12 @@ public class Kruskal extends AlgoritmoAGM{
 		// System.out.println("Custo Minimo: " + custoMinimo);
 	}
 
+
+	// Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Imprime na tela o resultado do algoritmo de Kruskal.
 	public void printKruskal() {
         System.out.print("arestas: ");
         this.getResult().forEach((aresta) -> {

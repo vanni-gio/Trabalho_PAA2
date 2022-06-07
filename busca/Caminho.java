@@ -4,6 +4,7 @@ import java.util.List;
 
 import estruturas.Vertice;
 
+// Classe para encapsular o caminho gerado pelos algoritmos
 public class Caminho {
     private List<Vertice> path;
 
@@ -34,7 +35,8 @@ public class Caminho {
     }
 
     public void add(Vertice v) {
-        this.path.add(v);
+        if(!hasVertice(v))
+            this.path.add(v);
     }
 
     @Override
@@ -48,5 +50,9 @@ public class Caminho {
         }
 
         return path;
+    }
+
+    public Vertice lastVertice(){
+        return this.getPath().get(this.getPath().size()-1);
     }
 }

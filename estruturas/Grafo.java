@@ -1,5 +1,6 @@
 package estruturas;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +11,12 @@ public class Grafo{
     private List<Aresta> arestas;
     private Map<Vertice, List<Vertice>> adjVertices;
     private boolean orientado = false;
-
+    
+    public Grafo(boolean orientado){
+        this.adjVertices = new HashMap<Vertice, List<Vertice>>();
+        this.orientado = orientado;
+        this.arestas = new LinkedList<Aresta>();
+    }
     public boolean isOrientado() {
         return orientado;
     }
@@ -19,6 +25,11 @@ public class Grafo{
         return arestas;
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Lista de todos os vértices do grafo.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Procura todos os vértices do grafo e ordena eles também.   
     public List<Vertice> getVertices(){
         var vertices = new LinkedList<Vertice>();
         this.adjVertices.keySet().forEach((v) -> {
@@ -38,19 +49,17 @@ public class Grafo{
 
     public void setArestas(List<Aresta> arestas) {
         this.arestas = arestas;
-    }
-
-    public Grafo(boolean orientado){
-        this.adjVertices = new HashMap<Vertice, List<Vertice>>();
-        this.orientado = orientado;
-        this.arestas = new LinkedList<Aresta>();
-    }
-    
+    }    
     
     public Map<Vertice, List<Vertice>> getAdjVertices() {
         return adjVertices;
     }
 
+    // Entrada: Um vértice.
+    // Saída: Lista de vértices adjacentes.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Busca todas as arestas que fazem adjacêcia com um vértice.   
     public List<Aresta> getArestasAdj(Vertice u) {
         List<Aresta> arts = new LinkedList<Aresta>();
         for (Aresta aresta : this.arestas) {
@@ -68,41 +77,62 @@ public class Grafo{
         return null;
     }
 
+    
     public void setAdjVertices(Map<Vertice, List<Vertice>> adjVertices) {
         this.adjVertices = adjVertices;
     }
 
-    public void addVertice(Integer v, Integer u, int peso) {
-        Vertice vAux = new Vertice(v);
-        Vertice uAux = new Vertice(u);
+    // Entrada: origem, destino e peso de um vértice.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Instancias de vertices criadas e adicionas nas lista de adjacência.
+    // Descrição: Instancia e adiciona objetos vértices no HashMap.   
+    public void addVertice(Integer origem, Integer destino, int peso) {
+        var auxOrigem = new Vertice(origem);
+        var auxDestino = new Vertice(destino);
 
-        this.addAresta(peso, vAux, uAux);
-        this.addVerticeNoMap(vAux);
-        this.addVerticeNoMap(uAux); 
+        this.addAresta(peso, auxOrigem, auxDestino);
+        this.addVerticeNoMap(auxOrigem);
+        this.addVerticeNoMap(auxDestino); 
             
-        this.addAdjToVerticeList(vAux, uAux);
+        this.addAdjToVerticeList(auxOrigem, auxDestino);
         if(!orientado){
-            this.addAdjToVerticeList(uAux, vAux);
-            this.addAresta(peso, uAux, vAux);
+            this.addAdjToVerticeList(auxDestino, auxOrigem);
+            this.addAresta(peso, auxDestino, auxOrigem);
         }
     }
 
-    private void addAresta(int peso, Vertice vAux, Vertice uAux) {
-        Aresta a = new Aresta(vAux, uAux, peso);
-        this.arestas.add(a);
+    // Entrada: Peso, origem e destino.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Aresta adicionada na lista.
+    // Descrição: Cria e adiciona uma aresta na lista de arestas.   
+    private void addAresta(int peso, Vertice origem, Vertice destin) {
+        var aresta = new Aresta(origem, destin, peso);
+        this.arestas.add(aresta);
     }
 
-    
+    // Entrada: Vertice origem e destino.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Vertice destino adicionado.
+    // Descrição: Adiciona o vértice destino na lista de vértices do vértice de origem.    
     private void addAdjToVerticeList(Vertice u, Vertice v) {
         adjVertices
             .get(u)
                 .add(v);
     }
 
+    // Entrada: Um vertice.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Vertice adicionado ao HashMap de vertices adjacentes.
+    // Descrição: Adiciona um vértice ao HashMap caso ele não tenha sido adicionado.
     private void addVerticeNoMap(Vertice v) {
         adjVertices.putIfAbsent(v, new LinkedList<>());
     }
 
+    
     public Vertice getVertice(Vertice v){
         for (Map.Entry<Vertice, List<Vertice>> entry : this.getAdjVertices().entrySet()) {
             Vertice u = entry.getKey();
@@ -140,4 +170,31 @@ public class Grafo{
         return print;
     }
 
+    // Entrada: Arestas de referência, e aresta principal.
+    // Saída: Lista de arestas vizinhas.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Percorre as arestas e define quais delas são arestas vizinhas da aresta principal. 
+    public static List<Aresta> getArestasVizinhas(Collection<Aresta> arestas, Aresta aresta) {
+        var arestasVizinhas = new LinkedList<Aresta>();
+        arestas.forEach((a) -> {
+            if(!a.equals(aresta)){
+                if(a.getOrigem().equals(aresta.getOrigem()) || a.getDestino().equals(aresta.getDestino())){
+                    arestasVizinhas.add(a);
+                }else if(a.getOrigem().equals(aresta.getDestino()) || a.getDestino().equals(aresta.getOrigem())){
+                    arestasVizinhas.add(a);
+                }
+            }
+        });
+        return arestasVizinhas;
+    }
+
+    // Entrada: Vertice a ser processado.
+    // Saída: Contém o vértice.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Verifica se possui um determinado vértice no grafo.
+    public boolean containsVertice(Integer v) {
+        return this.getVertices().contains(new Vertice(v));
+    }
 }

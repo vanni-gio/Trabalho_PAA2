@@ -52,12 +52,17 @@ public class Prim extends AlgoritmoAGM {
         this.inicial = inicial;
     }
 
-    public Vertice minVertice(Map<Vertice, Integer> key, Map<Vertice, Boolean> mst) {
+    // Entrada: Mapa de pesos dos vértices e mapa de vértices já "visitados".
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Determina qual vértice possui o menor peso entre os outros.
+    public Vertice minVertice(Map<Vertice, Integer> pesos, Map<Vertice, Boolean> mst) {
         var min = Integer.MAX_VALUE;
         Vertice minVertice = null;
         for (var v : this.getGrafo().getVertices()) {
-            if(key.get(v) < min && !mst.get(v)){
-                min = key.get(v);
+            if(pesos.get(v) < min && !mst.get(v)){
+                min = pesos.get(v);
                 minVertice = v;
             }
         }
@@ -65,6 +70,12 @@ public class Prim extends AlgoritmoAGM {
         return minVertice;
     }
 
+
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Faz o processamento do algoritmo de Prim.
     public void primMST(){
         final var numV = this.getGrafo().getNumVertices();
         var pesos = new HashMap<Vertice, Integer>(numV);
@@ -97,6 +108,11 @@ public class Prim extends AlgoritmoAGM {
         this.setResult(parent.values());
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Imprime na tela o resultado do algoritmo de Prim.
     public void printPrimAGM() {
         this.getPrimAGM().remove(this.getInicial(), null);
         System.out.println("vertice inicial: " + this.getInicial());

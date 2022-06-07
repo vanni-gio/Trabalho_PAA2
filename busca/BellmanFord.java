@@ -1,18 +1,16 @@
 package busca;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 
 import estruturas.AlgoritmoDeBusca;
 import estruturas.Aresta;
 import estruturas.Grafo;
 import estruturas.Vertice;
 
-public class BellmanFord extends AlgoritmoDeBusca{
-    private Map<Vertice, Caminho> menoresCaminhos;  
+public class BellmanFord extends AlgoritmoDeBusca {
+    private Map<Vertice, Caminho> menoresCaminhos;
     private List<Aresta> arestas;
 
     public BellmanFord(Grafo g, Integer v) {
@@ -38,68 +36,87 @@ public class BellmanFord extends AlgoritmoDeBusca{
         this.arestas = arestas;
     }
 
-    public List<Aresta> getArestasVertice(Vertice v){
-        List<Aresta> as = new LinkedList<Aresta>();
-        for (Aresta aresta : this.getArestas()) {
-            if(aresta.getOrigem().equals(v))
-                as.add(aresta);
-        }
-        return as;
-    }   
+    // // Entrada: Vertice v
+    // // Saída: Lista de arestas.
+    // // Pré-condição: Nenhuma.
+    // // Pós-condição: Distancias maximas atualizadas.
+    // // Descrição: Define as chaves dos mapas como os vértices do grafo, e suas distâncias são inicialmente "infinitas", menos o vertice inicial.
+    // public List<Aresta> getArestasVertice(Vertice v) {
+    //     List<Aresta> as = new LinkedList<Aresta>();
+    //     for (Aresta aresta : this.getArestas()) {
+    //         if (aresta.getOrigem().equals(v))
+    //             as.add(aresta);
+    //     }
+    //     return as;
+    // }
 
-    private void initMaps(Map<Vertice, Integer> distVerticeMax,  Map<Vertice, Vertice> predecessor) {
-		//Colocando a distâcia infinita para cada vértice e predecessores nulos
+    // Entrada: mapa de distancias máximas para os vértices.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Distancias maximas atualizadas.
+    // Descrição: Define as chaves dos mapas como os vértices do grafo, e suas distâncias são inicialmente "infinitas", menos o vertice inicial.
+    private void initMap(Map<Vertice, Integer> distVerticeMax) {
+        // Colocando a distâcia infinita para cada vértice e predecessores nulos
         for (Vertice vertice : this.getGrafo().getVertices()) {
             distVerticeMax.put(vertice, Integer.MAX_VALUE);
-            predecessor.put(vertice, null);
+            //predecessor.put(vertice, null);
         }
         distVerticeMax.put(this.getVerticeOrigem(), 0);
     }
 
-    private void relaxamento(Map<Vertice, Integer> distMax, Map<Vertice, Vertice> predecessor) {
+    // Entrada: mapa de distancias máximas para os vértices.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Distancias maximas atualizadas.
+    // Descrição: Faz o relaxamento para todas as arestas do grafo.
+    private void buscaAux(Map<Vertice, Integer> distMax) {
         final int numVertices = this.getGrafo().getNumVertices();
         var vertices = this.getGrafo().getVertices();
         vertices.forEach((vertice) -> {
-            menoresCaminhos.put(vertice, null);
+            menoresCaminhos.put(vertice, new Caminho(this.getVerticeOrigem()));
         });
-
-        Caminho c = new Caminho();
         for (int i = 0; i < numVertices - 1; i++) {
             for (Aresta aresta : this.getArestas()) {
-                Vertice u = aresta.getOrigem();
-                Vertice v = aresta.getDestino();
-                int distanciaU = distMax.get(u);
-                int distanciaV = distMax.get(v);
-                int peso = aresta.getPeso();
-                if(distMax.get(u) != Integer.MAX_VALUE && distanciaU + peso < distanciaV){
-                    distMax.put(v, distanciaU + peso);
-                    if(!c.getPath().contains(u))
-                        c.add(u);
-                    if(!c.getPath().contains(v))
-                        c.add(v);
-                }
+                relaxamento(distMax, aresta);
             }
         }
-        createMenoresCaminhos(c);
         menoresCaminhos.forEach((key, value) -> {
-            System.out.println(value);
+            System.out.println(key + " : " + value);
         });
     }
 
-    private void createMenoresCaminhos(Caminho c) {       
-        menoresCaminhos.forEach((key, value) -> {
-            Caminho aux = new Caminho(c.getPath().subList(0, c.getPath().indexOf(key)+1));
-            menoresCaminhos.put(key, aux);
-        });
+    // Entrada: distancias máximas e aresta a ser processada.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Distancias maximas atualizadas.
+    // Descrição: Realiza o relaxamento para uma aresta.
+    private void relaxamento(Map<Vertice, Integer> distMax, Aresta aresta) {
+        Vertice u = aresta.getOrigem();
+        Vertice v = aresta.getDestino();
+        int distanciaU = distMax.get(u);
+        int distanciaV = distMax.get(v);
+        int peso = aresta.getPeso();
+        if (distanciaU != Integer.MAX_VALUE && distanciaU + peso < distanciaV) {
+            distMax.put(v, distanciaU + peso);
+            menoresCaminhos.forEach((k,c) -> {
+                if(!c.lastVertice().equals(k)){
+                    c.add(v);
+                }
+            });
+        }
     }
 
-    public void buscar(){
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Caminhos mínimos criados.
+    // Descrição: Executa o algoritmo de busca bellmanford.
+    public void buscar() {
         final int size = this.getGrafo().getNumVertices();
-        Map<Vertice, Integer> distVerticeMax = new HashMap<Vertice,Integer>(size);
-		Map<Vertice, Vertice> predecessor = new HashMap<Vertice,Vertice>(size);
-        this.initMaps(distVerticeMax, predecessor);
-        this.relaxamento(distVerticeMax, predecessor);
-        distVerticeMax.forEach((v,d) -> {
+        Map<Vertice, Integer> distVerticeMax = new HashMap<Vertice, Integer>(size); // mapa de distâncias para cada vértice
+        this.initMap(distVerticeMax);
+        this.buscaAux(distVerticeMax);
+        distVerticeMax.forEach((v, d) -> {
             System.out.println("destino " + v.toString() + " dist.: " + d);
         });
     }
@@ -110,11 +127,8 @@ public class BellmanFord extends AlgoritmoDeBusca{
         return super.toString();
     }
 
-    public static List<Vertice> mergeList(List<Vertice> a, List<Vertice> b) {
-        for (Vertice vertice : b) {
-            if(!a.contains(vertice))
-                a.add(vertice);
-        }
-        return a;
-    }   
+    @Override
+    public String className() {
+        return "BellmanFord";
+    }
 }

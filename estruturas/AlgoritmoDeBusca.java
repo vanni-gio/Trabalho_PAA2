@@ -4,6 +4,7 @@ import java.util.Map;
 
 import busca.Caminho;
 
+// Classe abstrata para encapsular métodos e atributos utilizados por todos os algoritmos de busca.
 public abstract class AlgoritmoDeBusca {
     private Grafo grafo;
     private Map<Vertice, List<Vertice>> vertices;

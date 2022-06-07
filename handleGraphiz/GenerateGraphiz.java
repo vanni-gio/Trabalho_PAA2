@@ -5,19 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+
 
 import estruturas.Aresta;
 import estruturas.Grafo;
 
 
 public class GenerateGraphiz {
+    private final String path = "grafosGraphiz/grafo.gv";
     private Collection<Aresta> arestasMin;
     private String tipoGrafo;
     private Cor[] cores;
     private HashMap<Aresta, Cor> coresAresta;
     private String dotCode;
+
+
+    // Descrição: Enum que representa algumas cores do Graphviz. 
     public enum Cor{
         GREEN("green"),
         BLACK("black"),
@@ -80,23 +83,15 @@ public class GenerateGraphiz {
         this.coresAresta = coresAresta;
     }
 
-    public List<Aresta> getArestasVizinhas(Aresta aresta) {
-        var arestasVizinhas = new LinkedList<Aresta>();
-        this.arestasMin.forEach((a) -> {
-            if(!a.equals(aresta)){
-                if(a.getOrigem().equals(aresta.getOrigem()) || a.getDestino().equals(aresta.getDestino())){
-                    arestasVizinhas.add(a);
-                }else if(a.getOrigem().equals(aresta.getDestino()) || a.getDestino().equals(aresta.getOrigem())){
-                    arestasVizinhas.add(a);
-                }
-            }
-        });
-        return arestasVizinhas;
-    }
 
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Cores das arestas definidas.
+    // Descrição: Define as cores das arestas, sendo que todas as cores vizinhas de uma aresta são diferentes. 
     public void definirCoresArestas() {
         this.arestasMin.forEach((aresta) -> {
-            var arestasVizinhas = getArestasVizinhas(aresta);
+            var arestasVizinhas = Grafo.getArestasVizinhas(arestasMin, aresta);
             int indexCor = 0;
             Cor corAtual = this.getCores()[indexCor];
             for (Aresta arestaVizinha : arestasVizinhas) {
@@ -110,6 +105,11 @@ public class GenerateGraphiz {
         });
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Imagem criada.
+    // Descrição: Executa no cmd o comando para gerar uma imagem a partir do código Dot gerado. 
     public void createImgGrafo(){
         Runtime rt = Runtime.getRuntime();
         var rootDir = System.getProperty("user.dir") + "\\grafosGraphiz";
@@ -122,8 +122,12 @@ public class GenerateGraphiz {
         }
     }
 
+    // Entrada: Dados do arquivo.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Arquivo criado e com os dados escritos.
+    // Descrição: Cria um arquivo .gv e escreve os dados nele.
     public void createFile(String data) {
-        String path = "grafosGraphiz/grafo.gv";
         try {
             File myObj = new File(path);
             myObj.createNewFile();
@@ -136,6 +140,11 @@ public class GenerateGraphiz {
           }
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Código dot.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Código dot gerado.
+    // Descrição: Monta os código dot a ser escrito no arquivo.
     public String gerarDotCode(){
         boolean orientado = this.getTipoGrafo().equals("") ? false : true;
         var arrow = orientado ? "->" : "--";
@@ -153,7 +162,12 @@ public class GenerateGraphiz {
         this.dotCode += "}";
         return dotCode;
     }
-
+    
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Executa os métodos para gerar o código Dot e executar o mesmo no cmd.
     public void run() {
         this.definirCoresArestas();
         var dotCode = this.gerarDotCode();

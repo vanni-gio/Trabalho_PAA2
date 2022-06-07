@@ -20,21 +20,25 @@ public class BuscaEmLargura extends AlgoritmoDeBusca{
         return caminho;
     }
     
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Executa o algoritmo de busca em largura.
     @Override
     public void buscar() {
-        Queue<Vertice> fila = new LinkedList<Vertice>();
-        LinkedList<Vertice> visistados = new LinkedList<Vertice>();
-        Vertice v = this.getVerticeOrigem();
-        visistados.add(v);
-        fila.add(v);
+        Queue<Vertice> fila = new LinkedList<Vertice>(); // fila de vértices a serem processador
+        LinkedList<Vertice> visitados = new LinkedList<Vertice>(); // lista de vértices visitados
+        visitados.add(this.getVerticeOrigem());
+        fila.add(this.getVerticeOrigem());
 
         while (!fila.isEmpty()) {
-            v = fila.poll();
-            addVerticeCaminho(v);
-            List<Vertice> vizinhos = getMapGrafo().get(v);
+            var atual = fila.poll(); // retira a primeiro vertice da fila
+            addVerticeCaminho(atual);
+            List<Vertice> vizinhos = getMapGrafo().get(atual);
             for (Vertice u : vizinhos) {
-                if(!visistados.contains(u)){
-                    visistados.add(u);
+                if(!visitados.contains(u)){
+                    visitados.add(u);
                     fila.add(u);
                 }
             }

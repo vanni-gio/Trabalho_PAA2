@@ -14,6 +14,11 @@ import menu.Menu;
 
 public class Main {
 
+    // Entrada: Args(nao usado).
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Função principal que chama as funções de execução do programa, além de instanciar objetos principais.
     public static void main(String[] args) {
         HandleLeituraArquivo handleArq = null;
         DadosArquivo dados = null;
@@ -108,7 +113,11 @@ public class Main {
             }
         }
     }
-
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Imprime na tela as opções do menu.
     private static void printOpcoes() {
         System.out.println("--------------------------------------");
         System.out.println("\t1 - Ler arquivo");
@@ -123,7 +132,14 @@ public class Main {
         System.out.print("\tDigite uma opção: ");
     }
 
+    // Entrada: Dados lidos do arquivo.
+    // Saída: Um grafo com as arestas e os vertices definidos no arquivo.
+    // Pré-condição: Grafo criado.
+    // Pós-condição: Nenhuma.
+    // Descrição: Cria um grafo a partir dos dados retirados do arquivo.
     public static Grafo createGrafo(DadosArquivo dadosArq) {
+        if(dadosArq == null)
+            return null;
         Grafo g = new Grafo(dadosArq.getOrientado());
         g.setNumVertices(dadosArq.getNumVertices());
         for (Vector<Integer> vector : dadosArq.getVerticesArray())
@@ -132,13 +148,26 @@ public class Main {
         return g;
     }
 
+    // Entrada: Grafo.
+    // Saída: Nenhuma.
+    // Pré-condição: Grafo criado.
+    // Pós-condição: Vertices e arestas ordenadas.
+    // Descrição: Ordena os vertices e as arestas de um grafo.
     private static void ordenaGrafo(Grafo g) {
+        if(g == null)
+            return;
         for (Map.Entry<Vertice, List<Vertice>> entry : g.getAdjVertices().entrySet()) {
             List<Vertice> list = entry.getValue();
             Collections.sort(list);
         }
+        Collections.sort(g.getArestas());
     }
 
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Estar no sistema operacional Windows.
+    // Pós-condição: Tela de saída limpa.
+    // Descrição: Executa o comando "cls" para limpar o buffer de saída do programa.
     private static void limparTela() {
         Runtime rt = Runtime.getRuntime();
         try {

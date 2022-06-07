@@ -16,14 +16,17 @@ public class HandleLeituraArquivo {
             this.leitor = new FileReader(path);
             
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             System.out.println("Arquivo näo encontrado!");
-            //TODO: handle exception
         }
         this.buffer = new BufferedReader(this.leitor);
         this.dados = new DadosArquivo();
     }
 
+	// Entrada: Nenhuma
+    // Saída: Nenhuma.
+    // Pré-condição: Arquivo aberto.
+    // Pós-condição: Nenhuma.
+    // Descrição: Faz a leitura do arquivo, linha por linha.
     public DadosArquivo lerArquivo() {
         try {
             //orientacao
@@ -52,6 +55,11 @@ public class HandleLeituraArquivo {
         return this.dados;
     }
 
+	// Entrada: Linha lida do arquivo.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Caracteres especiais removidos da linha..
+    // Descrição: Remove caracteres especiais de uma linha, e popula a estrutura de dados do arquivo
     public void handleLinha(String linha) {
         linha = linha.replace(" ", "");
         linha = linha.replace("(", "");
