@@ -11,13 +11,8 @@ public class HandleLeituraArquivo {
     private BufferedReader buffer;
     private DadosArquivo dados; 
 
-    public HandleLeituraArquivo(String path) {
-        try {
-            this.leitor = new FileReader(path);
-            
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo näo encontrado!");
-        }
+    public HandleLeituraArquivo(String path) throws FileNotFoundException {
+        this.leitor = new FileReader(path);
         this.buffer = new BufferedReader(this.leitor);
         this.dados = new DadosArquivo();
     }

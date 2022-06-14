@@ -82,7 +82,6 @@ public class Kruskal extends AlgoritmoAGM{
 	public void KruskalMST() {
 		List<Aresta> result = new LinkedList<Aresta>();
 		int i = 0, e = 0;
-
 		var pai = new HashMap<Vertice, SubSet>();
 		var rank = new HashMap<Vertice, Integer>();
 

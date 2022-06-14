@@ -1,5 +1,6 @@
 import arquivo.HandleLeituraArquivo;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -34,21 +35,34 @@ public class Main {
                     limparTela();
                     System.out.print("Digite o caminho do arquivo: ");
                     String path = ler.nextLine();
-                    handleArq = new HandleLeituraArquivo(path);
+                    try {
+                        handleArq = new HandleLeituraArquivo(path);
+                    } catch (FileNotFoundException e) {
+                        System.out.println("Arquivo não encontrado!");
+                        ler.nextLine();
+                        break;
+                    }
+
                     dados = handleArq.lerArquivo();
                     grafo = createGrafo(dados);
                     menu = new Menu(grafo);
+                    System.out.println("Arquivo carregado com sucesso!");
                     System.out.println("Digite enter para continuar...");
                     ler.nextLine();
+                    
                     break;
                 case "2":
                     limparTela();
+                    if (dados == null){
+                        System.out.println("Arquivo nao foi aberto");
+                        break;
+                    }else if(!grafo.isOrientado()){
+                        System.out.println("Nao foi possivel executar bellmanford, o grafo é não orientado");
+                        break;
+                    }
                     System.out.print("Digite o vertice inicial: ");
                     verticeInicial = Integer.parseInt(ler.nextLine());
-                    if (dados != null)
-                        menu.executarBellmanFord(verticeInicial);
-                    else
-                        System.out.println("Arquivo nao foi aberto");
+                    menu.executarBellmanFord(verticeInicial);
                     System.out.println("Digite enter para continuar...");
                     ler.nextLine();
                     break;
@@ -68,7 +82,7 @@ public class Main {
                     System.out.print("Digite o vertice inicial: ");
                     verticeInicial = Integer.parseInt(ler.nextLine());
                     if (dados != null)
-                        menu.executarBFS(verticeInicial);
+                        menu.executarDFS(verticeInicial);
                     else
                         System.out.println("Arquivo nao foi aberto");
                     System.out.println("Digite enter para continuar...");
@@ -96,7 +110,7 @@ public class Main {
                     break;
                 case "7":
                     limparTela();
-                    System.out.print("Digite 1 para Kruskal e 2 para Prim: ");
+                    printOpcoesGraphiz();
                     String algoritmo = ler.nextLine();
                     if (dados != null)
                         menu.executarGerarImgGraphiz(algoritmo);
@@ -128,6 +142,20 @@ public class Main {
         System.out.println("\t6 - Executar Prim");
         System.out.println("\t7 - Gerar Imagem");
         System.out.println("\t0 - Sair");
+        System.out.println("--------------------------------------\n");
+        System.out.print("\tDigite uma opção: ");
+    }
+
+    // Entrada: Nenhuma.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Nenhuma.
+    // Descrição: Imprime na tela as opções do menu para gerar as imagens.
+    private static void printOpcoesGraphiz() {
+        System.out.println("--------------------------------------");
+        System.out.println("\t1 - Kruskal");
+        System.out.println("\t2 - Prim");
+        System.out.println("\t3 - Representação do Grafo Carregado");
         System.out.println("--------------------------------------\n");
         System.out.print("\tDigite uma opção: ");
     }

@@ -195,6 +195,10 @@ public class Grafo{
     // Pós-condição: Nenhuma.
     // Descrição: Verifica se possui um determinado vértice no grafo.
     public boolean containsVertice(Integer v) {
-        return this.getVertices().contains(new Vertice(v));
+        for (var u : this.getVertices()) {
+            if(u.getValue() == v)
+                return true;
+        }
+        return false;
     }
 }

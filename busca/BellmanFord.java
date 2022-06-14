@@ -12,7 +12,9 @@ import estruturas.Vertice;
 public class BellmanFord extends AlgoritmoDeBusca {
     private Map<Vertice, Caminho> menoresCaminhos;
     private List<Aresta> arestas;
+    private boolean cicloNegativo = false;
 
+    
     public BellmanFord(Grafo g, Integer v) {
         this.setGrafo(g);
         this.setVerticeOrigem(this.getGrafo().getVertice(v));
@@ -23,7 +25,11 @@ public class BellmanFord extends AlgoritmoDeBusca {
     public Map<Vertice, Caminho> getMenoresCaminhos() {
         return menoresCaminhos;
     }
-
+   
+    public boolean isCicloNegativo() {
+        return cicloNegativo;
+    }
+    
     public void setMenoresCaminhos(Map<Vertice, Caminho> menoresCaminhos) {
         this.menoresCaminhos = menoresCaminhos;
     }
@@ -80,9 +86,12 @@ public class BellmanFord extends AlgoritmoDeBusca {
                 relaxamento(distMax, aresta);
             }
         }
-        menoresCaminhos.forEach((key, value) -> {
-            System.out.println(key + " : " + value);
-        });
+        for (int i = 0; i < numVertices - 1; i++) {
+            for (Aresta aresta : this.getArestas()) {
+                if(possuiCicloNegativo(distMax, aresta))
+                    this.cicloNegativo = true;
+            }
+        }
     }
 
     // Entrada: distancias máximas e aresta a ser processada.
@@ -106,6 +115,27 @@ public class BellmanFord extends AlgoritmoDeBusca {
         }
     }
 
+    // Entrada: distancias máximas e aresta a ser processada.
+    // Saída: Nenhuma.
+    // Pré-condição: Nenhuma.
+    // Pós-condição: Distancias maximas atualizadas.
+    // Descrição: Realiza o relaxamento para uma aresta.
+    private boolean possuiCicloNegativo(Map<Vertice, Integer> distMax, Aresta aresta) {
+        Vertice u = aresta.getOrigem();
+        Vertice v = aresta.getDestino();
+        int distanciaU = distMax.get(u);
+        int distanciaV = distMax.get(v);
+        int peso = aresta.getPeso();
+        if (distanciaU != Integer.MAX_VALUE && distanciaU + peso < distanciaV) {
+            return true;
+        }
+        return false;
+    }
+
+    
+
+
+
     // Entrada: Nenhuma.
     // Saída: Nenhuma.
     // Pré-condição: Nenhuma.
@@ -116,9 +146,13 @@ public class BellmanFord extends AlgoritmoDeBusca {
         Map<Vertice, Integer> distVerticeMax = new HashMap<Vertice, Integer>(size); // mapa de distâncias para cada vértice
         this.initMap(distVerticeMax);
         this.buscaAux(distVerticeMax);
-        distVerticeMax.forEach((v, d) -> {
-            System.out.println("destino " + v.toString() + " dist.: " + d);
-        });
+        if(!this.cicloNegativo){
+            distVerticeMax.forEach((v, d) -> {
+                System.out.println("destino " + v.toString() + " dist.: " + d);
+            });
+        }else{
+            System.out.println("O grafo contem ciclo com peso negativo");
+        }
     }
 
     @Override

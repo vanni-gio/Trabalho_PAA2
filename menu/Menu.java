@@ -28,8 +28,10 @@ public class Menu {
     // Pós-condição: Nenhuma.
     // Descrição: Chama as funções que executam o algoritmo Kruskal.
     public void executarKruskal() {
-        if (grafo != null)
+        if (grafo == null){
+            System.out.println("Erro");
             return;
+        }
         this.kruskal = new Kruskal(grafo);
         this.kruskal.KruskalMST();
         this.kruskal.printKruskal();
@@ -41,8 +43,10 @@ public class Menu {
     // Pós-condição: Nenhuma.
     // Descrição: Chama as funções que executam o algoritmo Prim.
     public void executarPrim(Integer inicial) {
-        if (!this.grafo.containsVertice(inicial) && grafo != null)
+        if (!this.grafo.containsVertice(inicial) || grafo == null){
+            System.out.println("Erro");
             return;
+        }
         this.prim = new Prim(grafo, inicial);
         this.prim.primMST();
         this.prim.printPrimAGM();
@@ -54,8 +58,10 @@ public class Menu {
     // Pós-condição: Nenhuma.
     // Descrição: Chama as funções que executam o algoritmo BellmanFord.
     public void executarBellmanFord(Integer inicial) {
-        if (!this.grafo.containsVertice(inicial) && grafo != null)
-            return;
+        if (!this.grafo.containsVertice(inicial) || grafo == null){
+            System.out.println("Erro");
+             return;
+        }
         this.bellford = new BellmanFord(grafo, inicial);
         handleAlgoritmoBusca(this.bellford);
     }
@@ -66,8 +72,10 @@ public class Menu {
     // Pós-condição: Nenhuma.
     // Descrição: Chama as funções que executam o algoritmo BFS.
     public void executarBFS(Integer inicial) {
-        if (!this.grafo.containsVertice(inicial) && grafo != null)
+        if (!this.grafo.containsVertice(inicial) || grafo == null){
+            System.out.println("Erro");
             return;
+        }
         this.BFS = new BuscaEmLargura(grafo, inicial);
         handleAlgoritmoBusca(this.BFS);
     }
@@ -78,8 +86,10 @@ public class Menu {
     // Pós-condição: Nenhuma.
     // Descrição: Chama as funções que executam o algoritmo DFS.
     public void executarDFS(Integer inicial) {
-        if (!this.grafo.containsVertice(inicial) && grafo != null)
+        if (!this.grafo.containsVertice(inicial) || grafo == null){
+            System.out.println("Erro");
             return;
+        }
         this.DFS = new BuscaEmProfundidade(grafo, inicial);
         handleAlgoritmoBusca(this.DFS);
     }
@@ -91,11 +101,19 @@ public class Menu {
     // Descrição: Ordena os vertices e as arestas de um grafo.
     public void executarGerarImgGraphiz(String op) {
         if (op.equals("1"))// kruskal
-            this.graphiz = new GenerateGraphiz(this.kruskal.getResult(), this.grafo);
+            if(kruskal != null)
+                this.graphiz = new GenerateGraphiz(this.kruskal.getResult(), this.grafo, "Kruskal");
+            else
+                System.out.println("Kruskal nao foi executado");
         else if (op.equals("2")) {// prim
-            this.graphiz = new GenerateGraphiz(this.prim.getResult(), this.grafo);
+            if(this.prim != null)
+                this.graphiz = new GenerateGraphiz(this.prim.getResult(), this.grafo, "Prim");
+            else
+                System.out.println("Prim nao foi executado");
+        } else if(op.equals("3")){
+            this.graphiz = new GenerateGraphiz(this.grafo.getArestas(), this.grafo, "Grafo");
         } else {
-            System.out.println("op invalido");
+            System.out.println("Opção invalida");
             return;
         }
         this.graphiz.run();
@@ -108,13 +126,24 @@ public class Menu {
     // Descrição: Imprime na tela o caminho gerado pelos algoritmos BellmanFord, DFS
     // e BFS.
     private static void handleAlgoritmoBusca(AlgoritmoDeBusca algoritmo) {
-        if (algoritmo == null)
+        if (algoritmo == null){
+            System.out.println("Algoritmo nao carregado");
             return;
+        }
+            
         algoritmo.buscar();
         if (algoritmo.className() != "BellmanFord")
             System.out.println("Caminho " + algoritmo.className() + " : " + algoritmo.getCaminho());
-        else
-            System.out.println("Caminho " + algoritmo.className() + " : " + algoritmo.getCaminho());
+        else{
+            var bellmanford = (BellmanFord) algoritmo;
+            if(!bellmanford.isCicloNegativo()){
+                System.out.println("Caminho " + algoritmo.className() + " : ");
+                bellmanford.getMenoresCaminhos().forEach((key, value) -> {
+                    System.out.println(key + " : " + value);
+                });
+            }
+        }
+            
     }
 
 }

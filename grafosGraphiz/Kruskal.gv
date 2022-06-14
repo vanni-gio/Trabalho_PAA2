@@ -1,0 +1,12 @@
+graph G{ 
+ size="8.5"
+ratio="expand";
+layout=neato;
+	node[shape="circle"];
+5 -- 4 [label="-1", color=green];
+3 -- 1 [label="2", color=green];
+2 -- 4 [label="3", color=black];
+4 -- 6 [label="5", color=red];
+3 -- 2 [label="7", color=red];
+3 -- 0 [label="5", color=black];
+}
